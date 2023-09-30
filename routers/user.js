@@ -1,23 +1,17 @@
-const { getUser, createUser, editUser, deleteUser } = require("../controllers/user")
-
 const router = require("express").Router()
-
-// Restful API
+const { getUser, createUser, updateUserAll, updateUser, deleteUser, login } = require('../controllers/user')
+const { authentication } = require("../middlewares")
 
 // Get -> get du lieu tu server len
 router.get('/', getUser)
-
 // Post -> Tao moi du lieu
-router.post('/', createUser)
-
+router.post('/', authentication, createUser)
+router.post('/login', login)
 // Put -> cap nhat lai toan bo
-router.put('/:id', editAllInfoUser)
-
+router.put('/:id', authentication, updateUserAll)
 // Patch -> cap nhat lai 1 phan 
-router.patch('/:id', editUser)
-
+router.patch('/:id', authentication, updateUser)
 // Delete -> xoa du lieu
-router.delete('/:id', deleteUser)
-
+router.delete('/:id', authentication, deleteUser)
 
 module.exports = router

@@ -15,7 +15,7 @@ router.get('/product', (req, res) => {
     return res.status(200).json({ message: "Get Hello world", user })
 })
 
-
+// yeu cau -> phai dang nhap 
 // Post -> Tao moi du lieu
 router.post('/product', (req, res) => {
     const username = req.body.username
