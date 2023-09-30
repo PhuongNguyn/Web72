@@ -1,33 +1,44 @@
-const router = require("express").Router()
-
-const products = [
+const user = [
     {
         id: 1,
         name: "Phuong",
-        price: 1000,
+        age: 10,
+        username: "phuong123",
+        password: "123456"
     }
 ]
 
-// Restful API
+const login = (req, res) => {
+    const username = req.body.username
+    const password = req.body.password
 
-// Get -> get du lieu tu server len
-router.get('/product', (req, res) => {
+    const checkExist = user.find(item => item.username == username)
+
+    if (!checkExist) {
+        return res.status(404).json({ message: "Khong tim thay user" })
+    }
+
+    if (!(checkExist.password == password)) {
+        return res.status(401).json({ message: "Sai mat khau" })
+    }
+
+    return res.status(200).json({ user: checkExist, token: "abc123456" })
+}
+
+const getUser = (req, res) => {
     return res.status(200).json({ message: "Get Hello world", user })
-})
+}
 
-// yeu cau -> phai dang nhap 
-// Post -> Tao moi du lieu
-router.post('/product', (req, res) => {
+const createUser = (req, res, next) => {
     const username = req.body.username
     const age = req.body.age
     const id = req.body.id
 
     const newUser = { id: id, name: username, age: age }
     return res.status(200).json({ message: "Post Hello World", user: [...user, newUser] })
-})
+}
 
-// Put -> cap nhat lai toan bo
-router.put('/product/:id', (req, res) => {
+const updateUserAll = (req, res) => {
     const id = req.params.id
     const username = req.body.username
     const age = req.body.age
@@ -42,10 +53,9 @@ router.put('/product/:id', (req, res) => {
     })
 
     return res.status(200).json({ message: "Put Hello world", user: result })
-})
+}
 
-// Patch -> cap nhat lai 1 phan 
-router.patch('/product/:id', (req, res) => {
+const updateUser = (req, res) => {
     const id = req.params.id
     const age = req.body.age
 
@@ -58,13 +68,13 @@ router.patch('/product/:id', (req, res) => {
     })
 
     return res.status(200).json({ message: "Patch Hello world", user: result })
-})
+}
 
-// Delete -> xoa du lieu
-router.delete('/product/:id', (req, res) => {
+const deleteUser = (req, res) => {
     const id = req.params.id
     const result = user.filter(item => item.id != id)
     return res.status(200).json({ message: "Delete Hello world", user: result })
-})
+}
 
-module.exports = router
+module.exports = { getUser, createUser, updateUser, deleteUser, updateUserAll, login }
+
