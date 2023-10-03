@@ -1,12 +1,5 @@
-const user = [
-    {
-        id: 1,
-        name: "Phuong",
-        age: 10,
-        username: "phuong123",
-        password: "123456"
-    }
-]
+const jwt = require("jsonwebtoken")
+const { user } = require("../data")
 
 const login = (req, res) => {
     const username = req.body.username
@@ -22,7 +15,13 @@ const login = (req, res) => {
         return res.status(401).json({ message: "Sai mat khau" })
     }
 
-    return res.status(200).json({ user: checkExist, token: "abc123456" })
+    const token = jwt.sign({
+        id: checkExist.id
+    }, process.env.JWT_SECRET_KEY, {
+        expiresIn: '1d'
+    })
+
+    return res.status(200).json({ user: checkExist, token: token })
 }
 
 const getUser = (req, res) => {
@@ -33,9 +32,10 @@ const createUser = (req, res, next) => {
     const username = req.body.username
     const age = req.body.age
     const id = req.body.id
-
+    const userId = req.userId
+    const createdBy = user.find(item => item.id == userId)
     const newUser = { id: id, name: username, age: age }
-    return res.status(200).json({ message: "Post Hello World", user: [...user, newUser] })
+    return res.status(200).json({ message: "Post Hello World", user: [...user, newUser], createdBy: createdBy })
 }
 
 const updateUserAll = (req, res) => {

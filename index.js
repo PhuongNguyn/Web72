@@ -5,6 +5,8 @@ const morgan = require("morgan")
 const router = require("./routers")
 const cors = require("cors")
 const { logMiddleWare } = require("./middlewares")
+const dotenv = require("dotenv")
+dotenv.config()
 
 app.use(morgan("combined"))
 // parse body trong request -> ko co thang nay thi khong lay duoc body tu request
