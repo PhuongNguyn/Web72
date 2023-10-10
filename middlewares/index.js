@@ -18,19 +18,6 @@ const authentication = (req, res, next) => {
         return res.status(401).json({ message: "Ban chua dang nhap" })
     }
 }
-
-// const authorization = (req, res, next) => {
-//     const userId = req.userId
-//     const findUser = user.find(item => item.id == userId)
-//     const findRole = role.find(item => item.id == findUser.role)
-
-//     if (!(findUser.role == "admin")) {
-//         return res.status(403).json({ message: "Ban khong co quyen de thuc hien hanh dong nay" })
-//     }
-
-//     next()
-// }
-
 const authorization = (key, action) => {
     return (req, res, next) => {
         const userId = req.userId
@@ -46,6 +33,20 @@ const authorization = (key, action) => {
         next()
     }
 }
+
+// const authorization = (req, res, next) => {
+//     const userId = req.userId
+//     const findUser = user.find(item => item.id == userId)
+//     const findRole = role.find(item => item.id == findUser.role)
+
+//     if (!(findUser.role == "admin")) {
+//         return res.status(403).json({ message: "Ban khong co quyen de thuc hien hanh dong nay" })
+//     }
+
+//     next()
+// }
+
+
 
 
 // const authorization = (arrayPermission) => {

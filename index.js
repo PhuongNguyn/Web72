@@ -6,9 +6,11 @@ const router = require("./routers")
 const cors = require("cors")
 const { logMiddleWare } = require("./middlewares")
 const dotenv = require("dotenv")
+const connectDb = require("./database")
 dotenv.config()
 
 app.use(morgan("combined"))
+connectDb()
 // parse body trong request -> ko co thang nay thi khong lay duoc body tu request
 app.use(express.json())
 // Global middlware
