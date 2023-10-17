@@ -18,6 +18,10 @@ const Product = mongoose.Schema({
 
     image: {
         type: String
+    },
+    createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: "users"
     }
 }, {
     timestamps: true

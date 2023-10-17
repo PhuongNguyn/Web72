@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken")
 const { user, role } = require("../data")
+const userModel = require("../model/user")
 
-const authentication = (req, res, next) => {
+const authentication = async (req, res, next) => {
     const bearerToken = req.headers.authorization // Khi ma dang nhap vao thanh cong -> backend cap cho ben phia client 1 doan ma
 
     if (!bearerToken) {
@@ -12,6 +13,11 @@ const authentication = (req, res, next) => {
     try {
         const checkToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
         const userId = checkToken.id
+        const user = await userModel.findById(userId)
+        if (!user) {
+            return res.status(401).json({ message: "Ban chua dang nhap" })
+        }
+        req.user = user
         req.userId = userId
         next()
     } catch (error) {

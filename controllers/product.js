@@ -1,5 +1,6 @@
 const productModel = require("../model/product")
 const joi = require("joi")
+const userModel = require("../model/user")
 
 const createProduct = async (req, res) => {
     try {
@@ -27,7 +28,7 @@ const createProduct = async (req, res) => {
             return res.status(400).json({ error: validate.error.message })
         }
 
-        const newProduct = await productModel.create({ name, price, quantity, image })
+        const newProduct = await productModel.create({ name, price, quantity, image, createdBy: req.userId })
         return res.status(201).json({ product: newProduct, message: "Tao san pham thanh cong" })
     } catch (error) {
         console.log(error)
@@ -74,7 +75,10 @@ const getPagingProduct = async (req, res) => {
         const pageSize = req.query.pageSize || 5// So luong phan tu trong 1 trang
         const pageIndex = req.query.pageIndex || 1 // So trang
 
-        const product = await productModel.find().skip(pageSize * pageIndex - pageSize).limit(pageSize)
+        const product = await productModel
+            .find()
+            .populate({ path: "createdBy", select: "-password" })
+            .skip(pageSize * pageIndex - pageSize).limit(pageSize)
         const count = await productModel.countDocuments()
         const totalPage = Math.ceil(count / pageSize)
 
