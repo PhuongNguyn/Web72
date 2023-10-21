@@ -1,6 +1,6 @@
 const express = require("express") // commonjs
 const app = express()
-const PORT = 3000
+const PORT = 3001
 const morgan = require("morgan")
 const router = require("./routers")
 const cors = require("cors")
@@ -10,6 +10,7 @@ const connectDb = require("./database")
 dotenv.config()
 
 app.use(morgan("combined"))
+app.use(cors({ origin: "*" }))
 connectDb()
 // parse body trong request -> ko co thang nay thi khong lay duoc body tu request
 app.use(express.json())
