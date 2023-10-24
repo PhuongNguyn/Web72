@@ -1,6 +1,7 @@
 const productModel = require("../model/product")
 const joi = require("joi")
 const userModel = require("../model/user")
+const { uploadImage } = require("../cloudinary")
 
 const createProduct = async (req, res) => {
     try {
@@ -21,14 +22,16 @@ const createProduct = async (req, res) => {
         const name = req.body.name
         const price = req.body.price
         const quantity = req.body.quantity
-        const image = req.body.image
+        const image = req.files.image
 
-        const validate = productSchema.validate({ name, price, quantity, image })
+        const validate = productSchema.validate({ name, price, quantity })
         if (validate.error) {
             return res.status(400).json({ error: validate.error.message })
         }
 
-        const newProduct = await productModel.create({ name, price, quantity, image, createdBy: req.userId })
+        const uploadFile = await uploadImage(image)
+
+        const newProduct = await productModel.create({ name, price, quantity, image: uploadFile, createdBy: req.userId })
         return res.status(201).json({ product: newProduct, message: "Tao san pham thanh cong" })
     } catch (error) {
         console.log(error)
