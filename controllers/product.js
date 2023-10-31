@@ -27,7 +27,8 @@ const createProduct = async (req, res) => {
             price: joi.number().required().messages({
                 "any.required": 'Gía tiền không được bỏ trống'
             }),
-            quantity: joi.number().required()
+            quantity: joi.number().required(),
+            slug: joi.string().required()
         }).unknown(true)
 
 
@@ -35,6 +36,7 @@ const createProduct = async (req, res) => {
         const price = req.body.price
         const quantity = req.body.quantity
         const image = req.files.image
+        const slug = req.body.slug
 
         const validate = productSchema.validate({ name, price, quantity })
         if (validate.error) {
@@ -43,7 +45,7 @@ const createProduct = async (req, res) => {
 
         const uploadFile = await uploadImage(image)
 
-        const newProduct = await productModel.create({ name, price, quantity, image: uploadFile, createdBy: req.userId })
+        const newProduct = await productModel.create({ name, price, quantity, image: uploadFile, createdBy: req.userId, slug })
         return res.status(201).json({ product: newProduct, message: "Tao san pham thanh cong" })
     } catch (error) {
         console.log(error)
@@ -58,12 +60,14 @@ const updateProduct = async (req, res) => {
         const price = req.body.price
         const quantity = req.body.quantity
         const image = req.files?.image
+        const slug = req.body.slug
 
         let dataUpdate = {
             id,
             name,
             price,
             quantity,
+            slug
         }
 
         if (image) {
